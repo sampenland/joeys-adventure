@@ -1,8 +1,9 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxState;
 
-class PlayState extends FlxState
+class GameState extends FlxState
 {
 	override public function create()
 	{
