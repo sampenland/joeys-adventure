@@ -6,6 +6,8 @@ class Colors
 {
 	public static final TRANSPARENT = FlxColor.TRANSPARENT;
 
+	public static final C_BACKGROUND = FlxColor.fromString("#e6d9bd");
+
 	public static final LightestTan = FlxColor.fromString("#eee1c4");
 	public static final LighterTan = FlxColor.fromString("#e6d9bd");
 	public static final LightTan = FlxColor.fromString("#dbcfb1");

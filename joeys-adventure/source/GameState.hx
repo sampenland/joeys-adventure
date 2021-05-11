@@ -6,6 +6,12 @@ import gameStateClasses.Background;
 
 class GameState extends FlxState
 {
+	// -----------------------------------
+	//  -- Game Play
+	public static final groundSpeed:Int = 24;
+	public static final groundDetailSpread:Int = 7;
+
+	// -----------------------------------
 	private var background:Background;
 
 	override public function create()
