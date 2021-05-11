@@ -9,7 +9,6 @@ class Background extends FlxTypedGroup<FlxSprite>
 {
 	private var backgroundColor:FlxSprite;
 
-	private var groundHeight:Int = 24;
 	private var ground:FlxSprite;
 	private var detailCreator:FlxTimer;
 
@@ -25,7 +24,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 
 		detailCreator = new FlxTimer().start(1, createGroundDetail);
 
-		ground = new FlxSprite(0, FlxG.height - groundHeight);
+		ground = new FlxSprite(0, FlxG.height - GameState.groundHeight);
 		ground.loadGraphic(AssetPaths.ground__png, false, 320, 2);
 		add(ground);
 
@@ -38,7 +37,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 	{
 		trace("created");
 		var detailType:Int = FlxG.random.int(1, 3);
-		var detail = new FlxSprite(320, FlxG.height - groundHeight + 1);
+		var detail = new FlxSprite(320, FlxG.height - GameState.groundHeight + 1);
 		switch (detailType)
 		{
 			case 1:

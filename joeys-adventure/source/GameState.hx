@@ -11,6 +11,7 @@ class GameState extends FlxState
 	//  -- Game Play
 	public static final groundSpeed:Int = 24;
 	public static final groundDetailSpread:Int = 7;
+	public static final groundHeight:Int = 24;
 
 	// Static
 	public static var player:Player;
@@ -25,7 +26,7 @@ class GameState extends FlxState
 		background = new Background();
 		add(background);
 
-		player = new Player(20, FlxG.height - 24 - 12);
+		player = new Player(20, FlxG.height - GameState.groundHeight - 12);
 		add(player);
 	}
 
