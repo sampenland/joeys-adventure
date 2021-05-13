@@ -11,6 +11,9 @@ class GameState extends FlxState
 	//  -- Game Play
 	public static final groundSpeed:Int = 24;
 	public static final groundDetailSpread:Int = 7;
+	public static final bkgMountainSpread:Int = 34;
+	public static final mountainSpread:Int = 20;
+	public static final waterSpread:Int = 21;
 	public static final groundHeight:Int = 24;
 
 	// Static
