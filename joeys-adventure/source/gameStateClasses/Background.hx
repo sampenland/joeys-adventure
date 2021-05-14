@@ -24,6 +24,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 
 	private var bkgMountains:FlxSpriteGroup;
 	private var mountains:FlxSpriteGroup;
+	private var details:FlxSpriteGroup;
 
 	// Collision objections
 	public static var waterObjects:FlxSpriteGroup;
@@ -36,10 +37,16 @@ class Background extends FlxTypedGroup<FlxSprite>
 		backgroundColor.loadGraphic(AssetPaths.background__png, false, 320, 180);
 		add(backgroundColor);
 
+		sun = new FlxSprite(FlxG.width / 2, 32);
+		sun.loadGraphic(AssetPaths.sun__png, false, 48, 31);
+		add(sun);
+
 		bkgMountains = new FlxSpriteGroup();
 		mountains = new FlxSpriteGroup();
+		details = new FlxSpriteGroup();
 		add(bkgMountains);
 		add(mountains);
+		add(details);
 
 		detailCreator = new FlxTimer().start(1, createGroundDetail);
 		createWaterTimer = new FlxTimer().start(1, createWater);
@@ -50,10 +57,6 @@ class Background extends FlxTypedGroup<FlxSprite>
 		ground.immovable = true;
 		ground.loadGraphic(AssetPaths.ground__png, false, 320, 2);
 		add(ground);
-
-		sun = new FlxSprite(FlxG.width / 2, 32);
-		sun.loadGraphic(AssetPaths.sun__png, false, 48, 31);
-		add(sun);
 	}
 
 	private function createBkgMountain(_)
@@ -136,7 +139,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 			return;
 		}
 
-		var detailType:Int = FlxG.random.int(1, 9);
+		var detailType:Int = FlxG.random.int(1, 11);
 		var detail = new FlxSprite(320, FlxG.height - GameState.groundHeight);
 		switch (detailType)
 		{
@@ -164,10 +167,16 @@ class Background extends FlxTypedGroup<FlxSprite>
 			case 9:
 				detail.loadGraphic(AssetPaths.shrub4__png, false, 1, 7);
 				detail.y -= detail.height;
+			case 10:
+				detail.loadGraphic(AssetPaths.tree1__png, false, 16, 34);
+				detail.y -= detail.height - 6;
+			case 11:
+				detail.loadGraphic(AssetPaths.tree2__png, false, 19, 43);
+				detail.y -= detail.height - 5;
 		}
 
 		detail.velocity.x = -GameState.groundSpeed;
-		add(detail);
+		details.add(detail);
 
 		detailCreator = new FlxTimer().start(FlxG.random.int(1, GameState.groundDetailSpread), createGroundDetail);
 	}
@@ -177,7 +186,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 		super.update(elapsed);
 
 		// remove if off screen
-		forEachAlive(function(obj)
+		details.forEachAlive(function(obj)
 		{
 			if (obj.x < -obj.width)
 			{
@@ -212,6 +221,11 @@ class Background extends FlxTypedGroup<FlxSprite>
 
 	public function reset()
 	{
+		details.forEachAlive(function(obj)
+		{
+			obj.kill();
+		});
+
 		bkgMountains.forEachAlive(function(obj)
 		{
 			obj.kill();

@@ -9,7 +9,6 @@ class Player extends FlxSprite
 {
 	private final moveSpeed:Int = 2500;
 	private final jumpForce:Int = 150;
-	private var canJump:Bool = true;
 
 	override public function new(x:Float, y:Float)
 	{
@@ -21,6 +20,9 @@ class Player extends FlxSprite
 		animation.add("left", [5, 6, 7, 8, 9], 14, true);
 		animation.add("waterDie", [10, 11, 12], 6, false);
 		animation.play("idle");
+
+		offset.x = width / 3;
+		width = width / 4;
 	}
 
 	override function update(elapsed:Float)
@@ -51,7 +53,7 @@ class Player extends FlxSprite
 		if (GameState.cutScene)
 			return;
 
-		var jump = FlxG.keys.anyJustPressed([W, UP, SPACE]);
+		var jump = FlxG.keys.anyPressed([W, UP, SPACE]);
 		var down = FlxG.keys.anyPressed([S, DOWN]);
 		var right = FlxG.keys.anyPressed([D, RIGHT]);
 		var left = FlxG.keys.anyPressed([A, LEFT]);
@@ -72,13 +74,10 @@ class Player extends FlxSprite
 		{
 			animation.play("idle");
 		}
-		if (jump && canJump)
+
+		if (jump && velocity.y == 0)
 		{
 			velocity.y = -jumpForce;
-			new FlxTimer().start(0.1, function(_)
-			{
-				canJump = false;
-			});
 		}
 	}
 
@@ -89,8 +88,5 @@ class Player extends FlxSprite
 		GameState.cutScene = true;
 	}
 
-	public function collisionWithGround()
-	{
-		canJump = true;
-	}
+	public function collisionWithGround() {}
 }
