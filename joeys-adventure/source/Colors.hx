@@ -14,7 +14,7 @@ class Colors
 	public static final Tan = FlxColor.fromString("#d6c7a3");
 	public static final DarkTan = FlxColor.fromString("#c3b797");
 	public static final TanGray = FlxColor.fromString("#ada387");
-	public static final LightBrow = FlxColor.fromString("#cc9970");
+	public static final LightBrown = FlxColor.fromString("#cc9970");
 	public static final Brown = FlxColor.fromString("#a97e5c");
 	public static final DarkBrown = FlxColor.fromString("#937b6a");
 	public static final Gray = FlxColor.fromString("#a0a0a0");

@@ -56,6 +56,9 @@ class GameState extends FlxState
 
 	override public function update(elapsed:Float)
 	{
+		if (!FlxG.sound.music.playing)
+			FlxG.sound.playMusic(AssetPaths.music2_looped__ogg, 0.5, true);
+
 		if (paused)
 		{
 			pausedKeyboardListen();

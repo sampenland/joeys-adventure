@@ -13,6 +13,10 @@ class StoryState extends FlxState
 	override public function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		if (!FlxG.sound.music.playing)
+			FlxG.sound.playMusic(AssetPaths.music2_looped__ogg, 0.8, true);
+
 		keyboardListen();
 	}
 
