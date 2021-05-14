@@ -10,7 +10,8 @@ class Background extends FlxTypedGroup<FlxSprite>
 {
 	private var backgroundColor:FlxSprite;
 
-	private var ground:FlxSprite;
+	public static var ground:FlxSprite;
+
 	private var detailCreator:FlxTimer;
 
 	private var sun:FlxSprite;
@@ -23,6 +24,9 @@ class Background extends FlxTypedGroup<FlxSprite>
 
 	private var bkgMountains:FlxSpriteGroup;
 	private var mountains:FlxSpriteGroup;
+
+	// Collision objections
+	public static var waterObjects:FlxSpriteGroup;
 
 	override public function new()
 	{
@@ -43,6 +47,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 		mountainTimer = new FlxTimer().start(FlxG.random.int(1, 4), createMountain);
 
 		ground = new FlxSprite(0, FlxG.height - GameState.groundHeight);
+		ground.immovable = true;
 		ground.loadGraphic(AssetPaths.ground__png, false, 320, 2);
 		add(ground);
 
@@ -113,7 +118,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 		}
 
 		water.velocity.x = -GameState.groundSpeed;
-		add(water);
+		waterObjects.add(water);
 
 		createdWater = true;
 		createWaterTimer = new FlxTimer().start(Math.ceil(water.width / GameState.groundSpeed) + 1, function(_)
@@ -194,6 +199,32 @@ class Background extends FlxTypedGroup<FlxSprite>
 			{
 				obj.kill();
 			}
+		});
+
+		waterObjects.forEachAlive(function(obj)
+		{
+			if (obj.x < -obj.width)
+			{
+				obj.kill();
+			}
+		});
+	}
+
+	public function reset()
+	{
+		bkgMountains.forEachAlive(function(obj)
+		{
+			obj.kill();
+		});
+
+		mountains.forEachAlive(function(obj)
+		{
+			obj.kill();
+		});
+
+		waterObjects.forEachAlive(function(obj)
+		{
+			obj.kill();
 		});
 	}
 }
