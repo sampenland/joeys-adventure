@@ -37,7 +37,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 		backgroundColor.loadGraphic(AssetPaths.background__png, false, 320, 180);
 		add(backgroundColor);
 
-		sun = new FlxSprite(FlxG.width / 2 - 24, 32);
+		sun = new FlxSprite(FlxG.width / 2 - 24, 20);
 		sun.loadGraphic(AssetPaths.sun__png, false, 48, 31);
 		add(sun);
 

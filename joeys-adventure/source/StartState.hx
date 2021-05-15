@@ -18,9 +18,9 @@ class StartState extends FlxState
 	{
 		super.create();
 
-		var background = new FlxSprite();
-		background.makeGraphic(FlxG.width, FlxG.height, Colors.C_BACKGROUND);
-		add(background);
+		var backgroundColor = new FlxSprite();
+		backgroundColor.loadGraphic(AssetPaths.background__png, false, 320, 180);
+		add(backgroundColor);
 
 		sound = new FlxSprite();
 		sound.loadGraphic(AssetPaths.sound__png, false, 32, 32);
@@ -30,7 +30,7 @@ class StartState extends FlxState
 		var sText = new FlxText(0, 0, 0, "Space", 14);
 		sText.screenCenter();
 		sText.x += 50;
-		sText.y += 24;
+		sText.y += 25;
 		sText.setFormat(null, 14, Colors.DarkYellow);
 		sText.alignment = CENTER;
 
@@ -42,7 +42,7 @@ class StartState extends FlxState
 		var nsText = new FlxText(0, 0, 0, "N", 14);
 		nsText.screenCenter();
 		nsText.x -= 50;
-		nsText.y += 24;
+		nsText.y += 25;
 		nsText.setFormat(null, 14, Colors.DarkYellow);
 		nsText.alignment = CENTER;
 
