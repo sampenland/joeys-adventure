@@ -9,6 +9,14 @@ import openfl.filters.ShaderFilter;
 
 class Main extends Sprite
 {
+	public static var paused:Bool = false;
+	public static var cutScene:Bool = false;
+
+	public static final groundDetailSpread:Int = 7;
+	public static final bkgMountainSpread:Int = 34;
+	public static final mountainSpread:Int = 20;
+	public static final waterSpread:Int = 21;
+
 	public function new()
 	{
 		super();

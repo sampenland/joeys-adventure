@@ -36,10 +36,10 @@ class Player extends FlxSprite
 
 	private function applyGravity(elapsed:Float)
 	{
-		if (GameState.cutScene)
+		if (Main.cutScene)
 			return;
 
-		velocity.y += GameState.gravity;
+		velocity.y += GameState2EscapeChandler.gravity;
 	}
 
 	private function bounds()
@@ -50,7 +50,7 @@ class Player extends FlxSprite
 
 	private function keyboardControls(elapsed:Float)
 	{
-		if (GameState.cutScene)
+		if (Main.cutScene)
 			return;
 
 		var jump = FlxG.keys.anyPressed([W, UP, SPACE]);
@@ -84,8 +84,8 @@ class Player extends FlxSprite
 	public function collisionWithWater()
 	{
 		animation.play("waterDie");
-		animation.finishCallback = GameState.respawnPlayer;
-		GameState.cutScene = true;
+		animation.finishCallback = GameState2EscapeChandler.respawnPlayer;
+		Main.cutScene = true;
 	}
 
 	public function collisionWithGround() {}

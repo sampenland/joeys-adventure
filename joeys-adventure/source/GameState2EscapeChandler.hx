@@ -4,24 +4,22 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
+import flixel.system.FlxSound;
 import gameStateClasses.Background;
 import gameStateClasses.Player;
 
-class GameState extends FlxState
+class GameState2EscapeChandler extends FlxState
 {
 	// -----------------------------------
 	//  -- Game Play
-	public static var paused:Bool = false;
-	public static var cutScene:Bool = false;
 	public static var sceneTransitioning:Bool = false;
 
-	public static final groundSpeed:Int = 24;
+	private static final groundSpeed:Int = 24;
 	public static final gravity:Float = 9.8;
-	public static final groundDetailSpread:Int = 7;
-	public static final bkgMountainSpread:Int = 34;
-	public static final mountainSpread:Int = 20;
-	public static final waterSpread:Int = 21;
-	public static final groundHeight:Int = 24;
+	private static final groundHeight:Int = 24;
+
+	// Sounds
+	private static var frustration:FlxSound;
 
 	// Static
 	public static var player:Player;
@@ -33,15 +31,22 @@ class GameState extends FlxState
 	{
 		super.create();
 
+		loadSounds();
+
 		setupBackgroundCollisionGroups();
 
-		background = new Background();
+		background = new Background(groundHeight, groundSpeed);
 		add(background);
 
-		player = new Player(20, FlxG.height - GameState.groundHeight - 12);
+		player = new Player(20, FlxG.height - GameState2EscapeChandler.groundHeight - 12);
 		add(player);
 
 		addBackgroundCollisionGroups();
+	}
+
+	private function loadSounds()
+	{
+		frustration = FlxG.sound.load(AssetPaths.frustration__ogg, 0.6, false);
 	}
 
 	private function setupBackgroundCollisionGroups()
@@ -59,13 +64,13 @@ class GameState extends FlxState
 		if (!FlxG.sound.music.playing)
 			FlxG.sound.playMusic(AssetPaths.music2_looped__ogg, 0.5, true);
 
-		if (paused)
+		if (Main.paused)
 		{
 			pausedKeyboardListen();
 			return;
 		}
 
-		if (cutScene)
+		if (Main.cutScene)
 		{
 			player.update(elapsed);
 			keyboardListen();
@@ -104,9 +109,10 @@ class GameState extends FlxState
 	public static function respawnPlayer(_)
 	{
 		background.reset();
+		frustration.play();
 
-		cutScene = false;
-		player.setPosition(20, FlxG.height - GameState.groundHeight - 12);
+		Main.cutScene = false;
+		player.setPosition(20, FlxG.height - GameState2EscapeChandler.groundHeight - 12);
 	}
 
 	private function pausedKeyboardListen()

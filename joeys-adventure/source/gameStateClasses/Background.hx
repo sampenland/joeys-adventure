@@ -9,6 +9,8 @@ import flixel.util.FlxTimer;
 class Background extends FlxTypedGroup<FlxSprite>
 {
 	private var backgroundColor:FlxSprite;
+	private var groundHeight:Int;
+	private var groundSpeed:Float;
 
 	public static var ground:FlxSprite;
 
@@ -29,9 +31,12 @@ class Background extends FlxTypedGroup<FlxSprite>
 	// Collision objections
 	public static var waterObjects:FlxSpriteGroup;
 
-	override public function new()
+	override public function new(groundHeightR:Int, groundSpeedR:Float)
 	{
 		super();
+
+		groundHeight = groundHeightR;
+		groundSpeed = groundSpeedR;
 
 		backgroundColor = new FlxSprite();
 		backgroundColor.loadGraphic(AssetPaths.background__png, false, 320, 180);
@@ -53,7 +58,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 		bkgMountainTimer = new FlxTimer().start(FlxG.random.int(1, 8), createBkgMountain);
 		mountainTimer = new FlxTimer().start(FlxG.random.int(1, 4), createMountain);
 
-		ground = new FlxSprite(0, FlxG.height - GameState.groundHeight);
+		ground = new FlxSprite(0, FlxG.height - groundHeight);
 		ground.immovable = true;
 		ground.loadGraphic(AssetPaths.ground__png, false, 320, 2);
 		add(ground);
@@ -62,7 +67,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 	private function createBkgMountain(_)
 	{
 		var mountainType:Int = FlxG.random.int(1, 2);
-		var mountain = new FlxSprite(320, FlxG.height - GameState.groundHeight);
+		var mountain = new FlxSprite(320, FlxG.height - groundHeight);
 
 		switch (mountainType)
 		{
@@ -73,17 +78,17 @@ class Background extends FlxTypedGroup<FlxSprite>
 		}
 
 		mountain.y -= mountain.height;
-		mountain.velocity.x = -GameState.groundSpeed * 0.6;
+		mountain.velocity.x = -groundSpeed * 0.6;
 		bkgMountains.add(mountain);
 
-		bkgMountainTimer = new FlxTimer().start(Math.ceil(mountain.width / GameState.groundSpeed * 0.6) + FlxG.random.float(2, GameState.bkgMountainSpread),
+		bkgMountainTimer = new FlxTimer().start(Math.ceil(mountain.width / groundSpeed * 0.6) + FlxG.random.float(2, Main.bkgMountainSpread),
 			createBkgMountain);
 	}
 
 	private function createMountain(_)
 	{
 		var mountainType:Int = FlxG.random.int(1, 2);
-		var mountain = new FlxSprite(320, FlxG.height - GameState.groundHeight);
+		var mountain = new FlxSprite(320, FlxG.height - groundHeight);
 
 		switch (mountainType)
 		{
@@ -94,11 +99,10 @@ class Background extends FlxTypedGroup<FlxSprite>
 		}
 
 		mountain.y -= mountain.height;
-		mountain.velocity.x = -GameState.groundSpeed * 0.85;
+		mountain.velocity.x = -groundSpeed * 0.85;
 		mountains.add(mountain);
 
-		mountainTimer = new FlxTimer().start(Math.ceil(mountain.width / GameState.groundSpeed * 0.85) + FlxG.random.float(2, GameState.mountainSpread),
-			createMountain);
+		mountainTimer = new FlxTimer().start(Math.ceil(mountain.width / groundSpeed * 0.85) + FlxG.random.float(2, Main.mountainSpread), createMountain);
 	}
 
 	private function createWater(_)
@@ -110,7 +114,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 		}
 
 		var waterType:Int = FlxG.random.int(1, 2);
-		var water = new FlxSprite(320, FlxG.height - GameState.groundHeight);
+		var water = new FlxSprite(320, FlxG.height - groundHeight);
 
 		switch (waterType)
 		{
@@ -120,14 +124,14 @@ class Background extends FlxTypedGroup<FlxSprite>
 				water.loadGraphic(AssetPaths.water2__png, false, 32, 5);
 		}
 
-		water.velocity.x = -GameState.groundSpeed;
+		water.velocity.x = -groundSpeed;
 		waterObjects.add(water);
 
 		createdWater = true;
-		createWaterTimer = new FlxTimer().start(Math.ceil(water.width / GameState.groundSpeed) + 1, function(_)
+		createWaterTimer = new FlxTimer().start(Math.ceil(water.width / groundSpeed) + 1, function(_)
 		{
 			createdWater = false;
-			createWaterTimer = new FlxTimer().start(FlxG.random.int(1, GameState.waterSpread), createWater);
+			createWaterTimer = new FlxTimer().start(FlxG.random.int(1, Main.waterSpread), createWater);
 		});
 	}
 
@@ -135,12 +139,12 @@ class Background extends FlxTypedGroup<FlxSprite>
 	{
 		if (createdWater)
 		{
-			detailCreator = new FlxTimer().start(FlxG.random.int(1, GameState.groundDetailSpread), createGroundDetail);
+			detailCreator = new FlxTimer().start(FlxG.random.int(1, Main.groundDetailSpread), createGroundDetail);
 			return;
 		}
 
 		var detailType:Int = FlxG.random.int(1, 11);
-		var detail = new FlxSprite(320, FlxG.height - GameState.groundHeight);
+		var detail = new FlxSprite(320, FlxG.height - groundHeight);
 		switch (detailType)
 		{
 			case 1:
@@ -175,10 +179,10 @@ class Background extends FlxTypedGroup<FlxSprite>
 				detail.y -= detail.height - 5;
 		}
 
-		detail.velocity.x = -GameState.groundSpeed;
+		detail.velocity.x = -groundSpeed;
 		details.add(detail);
 
-		detailCreator = new FlxTimer().start(FlxG.random.int(1, GameState.groundDetailSpread), createGroundDetail);
+		detailCreator = new FlxTimer().start(FlxG.random.int(1, Main.groundDetailSpread), createGroundDetail);
 	}
 
 	override function update(elapsed:Float)

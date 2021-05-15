@@ -15,6 +15,10 @@ class MenuState extends FlxState
 	private var arrowIdx:Int = 0;
 	private var menuPadding:Int = 20;
 
+	private static final groundSpeed:Int = 24;
+	public static final gravity:Float = 9.8;
+	private static final groundHeight:Int = 24;
+
 	override public function create()
 	{
 		super.create();
@@ -23,7 +27,7 @@ class MenuState extends FlxState
 
 		Background.waterObjects = new FlxSpriteGroup();
 
-		var background = new Background();
+		var background = new Background(groundHeight, groundSpeed);
 		add(background);
 
 		add(Background.waterObjects);
