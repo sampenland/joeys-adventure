@@ -5,28 +5,42 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
+import flixel.system.FlxSound;
 import flixel.text.FlxText;
+import flixel.util.FlxTimer;
 
 class MenuState extends FlxState
 {
 	private var arrowPositions:Array<FlxPoint>;
 	private var arrow:FlxSprite;
 	private var arrowIdx:Int = 0;
-	private var menuPadding:Int = 20;
+	private var menuPadding:Int = 0;
 
 	private static final groundSpeed:Int = 24;
 	public static final gravity:Float = 9.8;
 	private static final groundHeight:Int = 24;
 
+	// friends
+	private var monica:FlxSprite;
+	private var rachel:FlxSprite;
+	private var phoebe:FlxSprite;
+	private var joey:FlxSprite;
+	private var chandler:FlxSprite;
+	private var ross:FlxSprite;
+
+	private var selection:FlxSound;
+
 	override public function create()
 	{
 		super.create();
+
+		selection = FlxG.sound.load(AssetPaths.jump__ogg, 0.5, false);
 
 		arrowPositions = new Array<FlxPoint>();
 
 		Background.waterObjects = new FlxSpriteGroup();
 
-		var background = new Background(groundHeight, groundSpeed);
+		var background = new Background(groundHeight, groundSpeed, true);
 		add(background);
 
 		add(Background.waterObjects);
@@ -61,6 +75,97 @@ class MenuState extends FlxState
 		arrow.x = arrowPositions[arrowIdx].x;
 		arrow.y = arrowPositions[arrowIdx].y;
 		add(arrow);
+
+		// Friends
+		var danceSpeed:Int = 8;
+
+		monica = new FlxSprite(30, FlxG.height - groundHeight - 12 + 1);
+		monica.loadGraphic(AssetPaths.monicaDance__png, true, 8, 12);
+		monica.animation.add("dance", [0, 1], danceSpeed, true);
+		add(monica);
+
+		var monicaLabel = new FlxSprite(monica.x - 10, monica.y - 12);
+		monicaLabel.loadGraphic(AssetPaths.monicaLabel__png, false, 28, 12);
+		monicaLabel.alpha = 0.5;
+		add(monicaLabel);
+
+		// rachel
+		rachel = new FlxSprite(80, FlxG.height - groundHeight - 12 + 1);
+		rachel.loadGraphic(AssetPaths.rachelDance__png, true, 8, 12);
+		rachel.animation.add("dance", [0, 1], danceSpeed, true);
+		add(rachel);
+
+		var rachelLabel = new FlxSprite(rachel.x - 8, rachel.y - 12);
+		rachelLabel.loadGraphic(AssetPaths.rachelLabel__png, false, 28, 12);
+		rachelLabel.alpha = 0.5;
+		add(rachelLabel);
+		// ---------
+
+		// phoebe
+		phoebe = new FlxSprite(130, FlxG.height - groundHeight - 12 + 1);
+		phoebe.loadGraphic(AssetPaths.phoebeDance__png, true, 10, 12);
+		phoebe.animation.add("dance", [0, 1, 2, 3], danceSpeed, true);
+		add(phoebe);
+
+		var phoebeLabel = new FlxSprite(phoebe.x - 8, phoebe.y - 12);
+		phoebeLabel.loadGraphic(AssetPaths.phoebeLabel__png, false, 32, 12);
+		phoebeLabel.alpha = 0.5;
+		add(phoebeLabel);
+		// --------
+
+		// ross
+		ross = new FlxSprite(FlxG.width - 30, FlxG.height - groundHeight - 12 + 1);
+		ross.loadGraphic(AssetPaths.rossDance__png, true, 8, 12);
+		ross.animation.add("dance", [0, 1], danceSpeed, true);
+		add(ross);
+
+		var rossLabel = new FlxSprite(ross.x - 6, ross.y - 12);
+		rossLabel.loadGraphic(AssetPaths.rossLabel__png, false, 32, 12);
+		rossLabel.alpha = 0.5;
+		add(rossLabel);
+		// -------------
+
+		// Chandler
+		chandler = new FlxSprite(FlxG.width - 80, FlxG.height - groundHeight - 12 + 1);
+		chandler.loadGraphic(AssetPaths.chandleDance__png, true, 8, 12);
+		chandler.animation.add("dance", [0, 1], danceSpeed, true);
+		add(chandler);
+
+		var chandlerLabel = new FlxSprite(chandler.x - 12, chandler.y - 12);
+		chandlerLabel.loadGraphic(AssetPaths.chandlerLabel__png, false, 32, 12);
+		chandlerLabel.alpha = 0.5;
+		add(chandlerLabel);
+		// --------------
+
+		// joey
+		joey = new FlxSprite(FlxG.width - 130, FlxG.height - groundHeight - 12 + 1);
+		joey.loadGraphic(AssetPaths.joeyDance__png, true, 8, 12);
+		joey.animation.add("dance", [0, 1], danceSpeed, true);
+		add(joey);
+
+		var joeyLabel = new FlxSprite(joey.x - 6, joey.y - 11);
+		joeyLabel.loadGraphic(AssetPaths.joeyLabel__png, false, 32, 12);
+		joeyLabel.alpha = 0.5;
+		add(joeyLabel);
+		// -------------
+
+		var title = new FlxText(0, 0, 0, "Joey's Adventure", 18);
+		title.setFormat(null, 18, Colors.DarkRed);
+		title.screenCenter();
+		title.y = 10;
+		add(title);
+
+		new FlxTimer().start(2.5, startDancing);
+	}
+
+	private function startDancing(_)
+	{
+		monica.animation.play("dance");
+		ross.animation.play("dance");
+		rachel.animation.play("dance");
+		chandler.animation.play("dance");
+		joey.animation.play("dance");
+		phoebe.animation.play("dance");
 	}
 
 	override public function update(elapsed:Float)
@@ -105,6 +210,8 @@ class MenuState extends FlxState
 
 		if (FlxG.keys.anyJustPressed([W, UP]))
 		{
+			selection.play(true);
+
 			arrowIdx--;
 
 			if (arrowIdx < 0)
@@ -116,6 +223,8 @@ class MenuState extends FlxState
 
 		if (FlxG.keys.anyJustPressed([S, DOWN]))
 		{
+			selection.play(true);
+
 			arrowIdx++;
 
 			if (arrowIdx > arrowPositions.length - 1)

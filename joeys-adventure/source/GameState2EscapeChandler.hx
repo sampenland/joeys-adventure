@@ -6,7 +6,6 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
-import flixel.system.FlxSound;
 import gameStateClasses.Hud;
 import gameStateClasses.Player;
 
@@ -91,6 +90,19 @@ class GameState2EscapeChandler extends FlxState
 		FlxG.overlap(player.player, Background.waterObjects, playerCollidesWater);
 		FlxG.collide(player.player, Background.ground, playerCollidesGround);
 		FlxG.overlap(Player.jumpWarning, Background.waterObjects, playerSeesWater);
+
+		FlxG.collide(chandler.chandler, Background.ground, chandlerCollidesGround);
+		FlxG.overlap(Chandler.jumpWarning, Background.waterObjects, chandlerSeesWater);
+	}
+
+	private function chandlerSeesWater(collisionSprite:FlxSprite, water:FlxSprite)
+	{
+		chandler.jump();
+	}
+
+	private function chandlerCollidesGround(chandlerSprite:FlxSprite, ground:FlxSprite)
+	{
+		chandler.collisionWithGround();
 	}
 
 	private function playerSeesWater(collisionSprite:FlxSprite, water:FlxSprite)

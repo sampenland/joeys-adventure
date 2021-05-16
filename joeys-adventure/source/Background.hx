@@ -27,11 +27,12 @@ class Background extends FlxTypedGroup<FlxSprite>
 	private var bkgMountains:FlxSpriteGroup;
 	private var mountains:FlxSpriteGroup;
 	private var details:FlxSpriteGroup;
+	private var windGusts:FlxSpriteGroup;
 
 	// Collision objections
 	public static var waterObjects:FlxSpriteGroup;
 
-	override public function new(groundHeightR:Int, groundSpeedR:Float)
+	override public function new(groundHeightR:Int, groundSpeedR:Float, ?staticBackground:Bool)
 	{
 		super();
 
@@ -41,6 +42,9 @@ class Background extends FlxTypedGroup<FlxSprite>
 		backgroundColor = new FlxSprite();
 		backgroundColor.loadGraphic(AssetPaths.background__png, false, 320, 180);
 		add(backgroundColor);
+
+		windGusts = new FlxSpriteGroup();
+		add(windGusts);
 
 		sun = new FlxSprite(FlxG.width / 2 - 24, 20);
 		sun.loadGraphic(AssetPaths.sun__png, false, 48, 31);
@@ -52,6 +56,20 @@ class Background extends FlxTypedGroup<FlxSprite>
 		add(bkgMountains);
 		add(mountains);
 		add(details);
+
+		if (staticBackground)
+		{
+			ground = new FlxSprite(0, FlxG.height - groundHeight);
+			ground.immovable = true;
+			ground.loadGraphic(AssetPaths.ground__png, false, 320, 2);
+			add(ground);
+
+			generateStaticBackground();
+
+			new FlxTimer().start(FlxG.random.float(4, 10), createWindGust);
+
+			return;
+		}
 
 		detailCreator = new FlxTimer().start(1, createGroundDetail);
 		createWaterTimer = new FlxTimer().start(1, createWater);
@@ -70,10 +88,36 @@ class Background extends FlxTypedGroup<FlxSprite>
 	{
 		var gust = new FlxSprite(325, FlxG.random.int(5, Std.int(FlxG.height / 2)));
 		gust.loadGraphic(AssetPaths.windGust__png, false, 10, 6);
-		gust.velocity.y = -FlxG.random.float(5, 15);
-		details.add(gust);
+		gust.velocity.x = -FlxG.random.float(10, 25);
+		windGusts.add(gust);
 
 		new FlxTimer().start(FlxG.random.float(4, 10), createWindGust);
+	}
+
+	private function generateStaticBackground()
+	{
+		sun.setPosition(FlxG.width - 60, sun.y);
+
+		var mountain1 = new FlxSprite(40, FlxG.height - groundHeight);
+		mountain1.loadGraphic(AssetPaths.bkgMountain1__png, false, 56, 95);
+		var mountain2 = new FlxSprite(190, FlxG.height - groundHeight);
+		mountain2.loadGraphic(AssetPaths.bkgMountain2__png, false, 238, 104);
+
+		mountain1.y -= mountain1.height;
+		mountain2.y -= mountain2.height;
+
+		bkgMountains.add(mountain1);
+		bkgMountains.add(mountain2);
+
+		var tree1 = new FlxSprite(4, FlxG.height - groundHeight + 6);
+		tree1.loadGraphic(AssetPaths.tree1__png, false, 16, 34);
+		tree1.y -= tree1.height;
+		details.add(tree1);
+
+		var tree2 = new FlxSprite(FlxG.width - 10, FlxG.height - groundHeight + 5);
+		tree2.loadGraphic(AssetPaths.tree2__png, false, 16, 34);
+		tree2.y -= tree2.height;
+		details.add(tree2);
 	}
 
 	private function createBkgMountain(_)
@@ -206,6 +250,14 @@ class Background extends FlxTypedGroup<FlxSprite>
 
 		// remove if off screen
 		details.forEachAlive(function(obj)
+		{
+			if (obj.x < -obj.width)
+			{
+				obj.kill();
+			}
+		});
+
+		windGusts.forEachAlive(function(obj)
 		{
 			if (obj.x < -obj.width)
 			{
