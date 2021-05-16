@@ -1,4 +1,4 @@
-package gameStateClasses;
+package;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -62,6 +62,18 @@ class Background extends FlxTypedGroup<FlxSprite>
 		ground.immovable = true;
 		ground.loadGraphic(AssetPaths.ground__png, false, 320, 2);
 		add(ground);
+
+		new FlxTimer().start(FlxG.random.float(4, 10), createWindGust);
+	}
+
+	private function createWindGust(_)
+	{
+		var gust = new FlxSprite(325, FlxG.random.int(5, Std.int(FlxG.height / 2)));
+		gust.loadGraphic(AssetPaths.windGust__png, false, 10, 6);
+		gust.velocity.y = -FlxG.random.float(5, 15);
+		details.add(gust);
+
+		new FlxTimer().start(FlxG.random.float(4, 10), createWindGust);
 	}
 
 	private function createBkgMountain(_)
@@ -123,6 +135,9 @@ class Background extends FlxTypedGroup<FlxSprite>
 			case 2:
 				water.loadGraphic(AssetPaths.water2__png, false, 32, 5);
 		}
+
+		water.offset.x = water.width * 0.125;
+		water.width = water.width * 0.75;
 
 		water.velocity.x = -groundSpeed;
 		waterObjects.add(water);

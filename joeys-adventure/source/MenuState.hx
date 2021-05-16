@@ -6,7 +6,6 @@ import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxPoint;
 import flixel.text.FlxText;
-import gameStateClasses.Background;
 
 class MenuState extends FlxState
 {

@@ -1,11 +1,13 @@
 package;
 
+import Main.Levels;
+import escapeChandler.Chandler;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxSound;
-import gameStateClasses.Background;
+import gameStateClasses.Hud;
 import gameStateClasses.Player;
 
 class GameState2EscapeChandler extends FlxState
@@ -14,39 +16,41 @@ class GameState2EscapeChandler extends FlxState
 	//  -- Game Play
 	public static var sceneTransitioning:Bool = false;
 
-	private static final groundSpeed:Int = 24;
-	public static final gravity:Float = 9.8;
+	private static final groundSpeed:Int = 32;
+	public static final gravity:Float = 8;
 	private static final groundHeight:Int = 24;
 
-	// Sounds
-	private static var frustration:FlxSound;
+	public static final playerStartXPos:Int = 75;
 
 	// Static
 	public static var player:Player;
+	public static var chandler:Chandler;
 
 	// -----------------------------------
 	private static var background:Background;
 
+	public static var hud:Hud;
+
 	override public function create()
 	{
+		Main.currentLevel = Levels.EscapeChandler;
 		super.create();
-
-		loadSounds();
 
 		setupBackgroundCollisionGroups();
 
 		background = new Background(groundHeight, groundSpeed);
 		add(background);
 
-		player = new Player(20, FlxG.height - GameState2EscapeChandler.groundHeight - 12);
+		chandler = new Chandler(20, FlxG.height - groundHeight - 12);
+		add(chandler);
+
+		player = new Player(playerStartXPos, FlxG.height - groundHeight - 12);
 		add(player);
 
 		addBackgroundCollisionGroups();
-	}
 
-	private function loadSounds()
-	{
-		frustration = FlxG.sound.load(AssetPaths.frustration__ogg, 0.6, false);
+		hud = new Hud(0, 0);
+		add(hud);
 	}
 
 	private function setupBackgroundCollisionGroups()
@@ -84,16 +88,22 @@ class GameState2EscapeChandler extends FlxState
 
 	private function collisions(elapsed:Float)
 	{
-		FlxG.overlap(player, Background.waterObjects, playerCollidesWater);
-		FlxG.collide(player, Background.ground, playerCollidesGround);
+		FlxG.overlap(player.player, Background.waterObjects, playerCollidesWater);
+		FlxG.collide(player.player, Background.ground, playerCollidesGround);
+		FlxG.overlap(Player.jumpWarning, Background.waterObjects, playerSeesWater);
 	}
 
-	private function playerCollidesGround(player:Player, ground:FlxSprite)
+	private function playerSeesWater(collisionSprite:FlxSprite, water:FlxSprite)
+	{
+		player.showJumpWarning();
+	}
+
+	private function playerCollidesGround(playerSprite:FlxSprite, ground:FlxSprite)
 	{
 		player.collisionWithGround();
 	}
 
-	private function playerCollidesWater(player:Player, water:FlxSprite)
+	private function playerCollidesWater(playerSprite:FlxSprite, water:FlxSprite)
 	{
 		player.collisionWithWater();
 	}
@@ -109,10 +119,10 @@ class GameState2EscapeChandler extends FlxState
 	public static function respawnPlayer(_)
 	{
 		background.reset();
-		frustration.play();
+		player.levelReset();
 
 		Main.cutScene = false;
-		player.setPosition(20, FlxG.height - GameState2EscapeChandler.groundHeight - 12);
+		chandler.setPosition(20, FlxG.height - GameState2EscapeChandler.groundHeight - 12);
 	}
 
 	private function pausedKeyboardListen()
@@ -125,5 +135,17 @@ class GameState2EscapeChandler extends FlxState
 				FlxG.switchState(new MenuState());
 			});
 		}
+	}
+
+	public static function endGame()
+	{
+		if (sceneTransitioning)
+			return;
+
+		sceneTransitioning = true;
+		FlxG.camera.fade(Colors.TanGray, 0.33, false, function()
+		{
+			FlxG.switchState(new MenuState());
+		});
 	}
 }
