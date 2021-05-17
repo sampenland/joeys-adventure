@@ -38,7 +38,14 @@ class StoryState extends FlxState
 
 		loadSounds();
 
-		FlxTween.tween(FlxG.sound.music, {volume: 0}, 1, {onComplete: playStoryPart});
+		if (FlxG.sound.music != null)
+		{
+			FlxTween.tween(FlxG.sound.music, {volume: 0}, 1, {onComplete: playStoryPart});
+		}
+		else
+		{
+			gotoGame(null);
+		}
 	}
 
 	private function loadSounds()
