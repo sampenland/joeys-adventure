@@ -225,5 +225,10 @@ class StoryState extends FlxState
 		{
 			transition();
 		}
+
+		if (FlxG.keys.anyJustPressed([M]))
+		{
+			FlxG.sound.muted = !FlxG.sound.muted;
+		}
 	}
 }

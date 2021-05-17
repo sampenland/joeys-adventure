@@ -195,6 +195,11 @@ class MenuState extends FlxState
 			Sys.exit(0);
 		}
 
+		if (FlxG.keys.anyJustPressed([M]))
+		{
+			FlxG.sound.muted = !FlxG.sound.muted;
+		}
+
 		if (FlxG.keys.anyJustPressed([SPACE, ENTER]))
 		{
 			switch (arrowIdx)

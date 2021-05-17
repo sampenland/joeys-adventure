@@ -14,7 +14,8 @@ class PreStateEscapeChandler extends FlxState
 	{
 		super.create();
 
-		FlxG.sound.playMusic(AssetPaths.music2_looped__ogg, 0.5, false);
+		if (FlxG.sound.music != null)
+			FlxG.sound.playMusic(AssetPaths.music2_looped__ogg, 0.5, false);
 
 		var backgroundColor = new FlxSprite();
 		backgroundColor.loadGraphic(AssetPaths.background__png, false, 320, 180);
@@ -59,6 +60,11 @@ class PreStateEscapeChandler extends FlxState
 		if (FlxG.keys.anyJustPressed([SPACE, ENTER, ESCAPE]))
 		{
 			startNextState(null);
+		}
+
+		if (FlxG.keys.anyJustPressed([M]))
+		{
+			FlxG.sound.muted = !FlxG.sound.muted;
 		}
 	}
 }

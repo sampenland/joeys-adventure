@@ -126,6 +126,11 @@ class GameState2EscapeChandler extends FlxState
 		{
 			Sys.exit(0);
 		}
+
+		if (FlxG.keys.anyJustPressed([M]))
+		{
+			FlxG.sound.muted = !FlxG.sound.muted;
+		}
 	}
 
 	public static function respawnPlayer(_)

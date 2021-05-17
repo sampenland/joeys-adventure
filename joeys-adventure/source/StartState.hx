@@ -37,7 +37,7 @@ class StartState extends FlxState
 		noSound.screenCenter();
 		noSound.x -= 50;
 
-		var nsText = new FlxText(0, 0, 0, "N", 14);
+		var nsText = new FlxText(0, 0, 0, "M", 14);
 		nsText.screenCenter();
 		nsText.x -= 50;
 		nsText.y += 25;
@@ -70,7 +70,7 @@ class StartState extends FlxState
 			gotoMenu();
 		}
 
-		if (FlxG.keys.anyJustPressed([N]))
+		if (FlxG.keys.anyJustPressed([M]))
 		{
 			FlxG.sound.muted = true;
 			gotoMenu();
