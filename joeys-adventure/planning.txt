@@ -2,3 +2,5 @@
 
     1. make monica entrance as function and bring her in every time hunger drops below 50
     2. make monica throw food which gives back jumps
+
+    ross is allergic to Kiwi - chandler gives these to joey to throw

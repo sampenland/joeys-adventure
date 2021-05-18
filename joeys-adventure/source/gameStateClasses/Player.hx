@@ -19,8 +19,8 @@ class Player extends FlxSpriteGroup
 	private static var jumpSound:FlxSound;
 
 	// Stats
-	private var hunger:Int = 100;
-	private var lives:Int = 3;
+	public var hunger:Int = 100;
+	public var lives:Int = 3;
 
 	// Sprites
 	public var player:FlxSprite;
@@ -178,12 +178,14 @@ class Player extends FlxSpriteGroup
 		}
 	}
 
-	private function changeHunger(val:Int, ?set:Bool)
+	public function changeHunger(val:Int, ?set:Bool)
 	{
 		hunger += val;
 
 		if (set != null)
 			hunger = val;
+
+		hunger = (cast FlxMath.bound(hunger, 0, 100) : Int);
 
 		switch (Main.currentLevel)
 		{

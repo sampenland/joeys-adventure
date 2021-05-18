@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
+import flixel.system.FlxSound;
 
 class Chandler extends FlxSpriteGroup
 {
@@ -14,6 +15,8 @@ class Chandler extends FlxSpriteGroup
 	// Collision boxes
 	public static var jumpWarning:FlxSprite;
 
+	private var jumpSound:FlxSound;
+
 	private final jumpWarningX:Int = 20;
 	private final jumpForce:Int = 150;
 	private final jumpXForce:Int = 26;
@@ -22,6 +25,8 @@ class Chandler extends FlxSpriteGroup
 	override public function new(xR:Float, yR:Float)
 	{
 		super();
+
+		jumpSound = FlxG.sound.load(AssetPaths.chandlerJump__ogg, 0.6, false);
 
 		x = xR;
 		y = yR;
@@ -65,6 +70,8 @@ class Chandler extends FlxSpriteGroup
 
 	public function jump()
 	{
+		jumpSound.play();
+
 		chandler.velocity.y = -jumpForce;
 		chandler.velocity.x = jumpXForce;
 	}

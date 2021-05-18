@@ -26,11 +26,11 @@ class Background extends FlxTypedGroup<FlxSprite>
 
 	private var bkgMountains:FlxSpriteGroup;
 	private var mountains:FlxSpriteGroup;
-	private var details:FlxSpriteGroup;
 	private var windGusts:FlxSpriteGroup;
 
-	// Collision objections
+	// Static objects
 	public static var waterObjects:FlxSpriteGroup;
+	public static var details:FlxSpriteGroup;
 
 	override public function new(groundHeightR:Int, groundSpeedR:Float, ?staticBackground:Bool)
 	{
@@ -55,7 +55,6 @@ class Background extends FlxTypedGroup<FlxSprite>
 		details = new FlxSpriteGroup();
 		add(bkgMountains);
 		add(mountains);
-		add(details);
 
 		if (staticBackground)
 		{
@@ -134,7 +133,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 		}
 
 		mountain.y -= mountain.height;
-		mountain.velocity.x = -groundSpeed * 0.6;
+		mountain.velocity.x = -groundSpeed * 0.2;
 		bkgMountains.add(mountain);
 
 		bkgMountainTimer = new FlxTimer().start(Math.ceil(mountain.width / groundSpeed * 0.6) + FlxG.random.float(2, Main.bkgMountainSpread),
@@ -155,7 +154,7 @@ class Background extends FlxTypedGroup<FlxSprite>
 		}
 
 		mountain.y -= mountain.height;
-		mountain.velocity.x = -groundSpeed * 0.85;
+		mountain.velocity.x = -groundSpeed * 0.55;
 		mountains.add(mountain);
 
 		mountainTimer = new FlxTimer().start(Math.ceil(mountain.width / groundSpeed * 0.85) + FlxG.random.float(2, Main.mountainSpread), createMountain);

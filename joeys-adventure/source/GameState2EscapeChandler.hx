@@ -6,6 +6,8 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
+import flixel.system.FlxSound;
+import gameStateClasses.HelperFriends;
 import gameStateClasses.Hud;
 import gameStateClasses.Player;
 
@@ -15,30 +17,40 @@ class GameState2EscapeChandler extends FlxState
 	//  -- Game Play
 	public static var sceneTransitioning:Bool = false;
 
-	private static final groundSpeed:Int = 32;
+	public static final groundSpeed:Int = 32;
 	public static final gravity:Float = 8;
-	private static final groundHeight:Int = 24;
+	public static final groundHeight:Int = 24;
 
 	public static final playerStartXPos:Int = 75;
+
+	private static var pizzas:FlxSpriteGroup;
 
 	// Static
 	public static var player:Player;
 	public static var chandler:Chandler;
+	public static var friendSpawner:HelperFriends;
 
 	// -----------------------------------
 	private static var background:Background;
 
 	public static var hud:Hud;
 
+	private var eatSound:FlxSound;
+
 	override public function create()
 	{
 		Main.currentLevel = Levels.EscapeChandler;
 		super.create();
 
+		eatSound = FlxG.sound.load(AssetPaths.pizzaEat__ogg, 0.6, false);
+
 		setupBackgroundCollisionGroups();
 
 		background = new Background(groundHeight, groundSpeed);
 		add(background);
+
+		friendSpawner = new HelperFriends(0, 0);
+		add(friendSpawner);
 
 		chandler = new Chandler(20, FlxG.height - groundHeight - 12);
 		add(chandler);
@@ -48,8 +60,17 @@ class GameState2EscapeChandler extends FlxState
 
 		addBackgroundCollisionGroups();
 
+		pizzas = new FlxSpriteGroup();
+		add(pizzas);
+
 		hud = new Hud(0, 0);
 		add(hud);
+	}
+
+	public static function createPizza(x:Float, y:Float, _)
+	{
+		var pizza = new Pizza(x, y);
+		pizzas.add(pizza);
 	}
 
 	private function setupBackgroundCollisionGroups()
@@ -60,11 +81,12 @@ class GameState2EscapeChandler extends FlxState
 	private function addBackgroundCollisionGroups()
 	{
 		add(Background.waterObjects);
+		add(Background.details);
 	}
 
 	override public function update(elapsed:Float)
 	{
-		if (!FlxG.sound.music.playing)
+		if (FlxG.sound.music != null && !FlxG.sound.music.playing)
 			FlxG.sound.playMusic(AssetPaths.music2_looped__ogg, 0.5, true);
 
 		if (Main.paused)
@@ -83,6 +105,18 @@ class GameState2EscapeChandler extends FlxState
 		super.update(elapsed);
 		keyboardListen();
 		collisions(elapsed);
+		friendSpawn(elapsed);
+	}
+
+	private function friendSpawn(elapsed:Float)
+	{
+		if (player.hunger < 40)
+		{
+			if (HelperFriends.canSpawnMonica)
+			{
+				friendSpawner.trySpawnMonica(false);
+			}
+		}
 	}
 
 	private function collisions(elapsed:Float)
@@ -93,6 +127,20 @@ class GameState2EscapeChandler extends FlxState
 
 		FlxG.collide(chandler.chandler, Background.ground, chandlerCollidesGround);
 		FlxG.overlap(Chandler.jumpWarning, Background.waterObjects, chandlerSeesWater);
+
+		FlxG.collide(Background.ground, pizzas);
+
+		FlxG.overlap(player.player, pizzas, playerCollidesPizza);
+	}
+
+	private function playerCollidesPizza(playerSprite:Player, pizza:Pizza)
+	{
+		if (pizza.pickedUp)
+			return;
+
+		pizza.pickup();
+		player.changeHunger(10);
+		eatSound.play(true);
 	}
 
 	private function chandlerSeesWater(collisionSprite:FlxSprite, water:FlxSprite)
