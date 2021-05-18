@@ -7,6 +7,7 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
 import flixel.system.FlxSound;
+import gameStateClasses.BirdController;
 import gameStateClasses.HelperFriends;
 import gameStateClasses.Hud;
 import gameStateClasses.Player;
@@ -32,6 +33,8 @@ class GameState2EscapeChandler extends FlxState
 
 	// -----------------------------------
 	private static var background:Background;
+
+	private var birdController:BirdController;
 
 	public static var hud:Hud;
 
@@ -69,19 +72,25 @@ class GameState2EscapeChandler extends FlxState
 
 	public static function createPizza(x:Float, y:Float, _)
 	{
+		if (friendSpawner.pizzasThrown > friendSpawner.maxPizzas)
+			return;
+
 		var pizza = new Pizza(x, y);
 		pizzas.add(pizza);
 	}
 
 	private function setupBackgroundCollisionGroups()
 	{
+		birdController = new BirdController();
 		Background.waterObjects = new FlxSpriteGroup();
+		BirdController.birds = new FlxSpriteGroup();
 	}
 
 	private function addBackgroundCollisionGroups()
 	{
 		add(Background.waterObjects);
 		add(Background.details);
+		add(BirdController.birds);
 	}
 
 	override public function update(elapsed:Float)
@@ -185,6 +194,13 @@ class GameState2EscapeChandler extends FlxState
 	{
 		background.reset();
 		player.levelReset();
+
+		pizzas.forEachAlive(function(pizza)
+		{
+			pizza.kill();
+		});
+
+		friendSpawner.resetLevel();
 
 		Main.cutScene = false;
 		chandler.setPosition(20, FlxG.height - GameState2EscapeChandler.groundHeight - 12);
