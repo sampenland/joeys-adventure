@@ -13,7 +13,10 @@ class HelperFriends extends FlxSpriteGroup
 
 	private var spawnMountain:FlxSprite;
 	private var monica:FlxSprite;
-	private var pizzasThrown:Int = 0;
+
+	public var pizzasThrown:Int = 0;
+	public final maxPizzas:Int = 13;
+
 	private var rachel:FlxSprite;
 
 	override public function new(x:Float, y:Float)
@@ -42,9 +45,11 @@ class HelperFriends extends FlxSpriteGroup
 
 		if (monica.x < 0)
 		{
+			pizzasThrown = 100;
 			monica.x = 340;
 			monica.visible = false;
 			monica.velocity.x = 0;
+			canSpawnMonica = true;
 		}
 
 		if (spawnMountain.x < 0)
@@ -100,11 +105,11 @@ class HelperFriends extends FlxSpriteGroup
 
 	private function throwPizza(_)
 	{
-		if (pizzasThrown > 9)
+		if (pizzasThrown > maxPizzas || (!(monica.visible && monica.x > 0 && monica.x < 320)))
 			return;
 
 		pizzasThrown++;
-		new FlxTimer().start(FlxG.random.float(1, 3), GameState2EscapeChandler.createPizza.bind(monica.x, monica.y - 2));
+		new FlxTimer().start(FlxG.random.float(1, 3), GameState2EscapeChandler.createPizza.bind(monica.x - monica.width, monica.y - 2));
 		new FlxTimer().start(FlxG.random.float(1, 4), throwPizza);
 	}
 
@@ -125,14 +130,21 @@ class HelperFriends extends FlxSpriteGroup
 
 		canSpawnPhoebe = false;
 
-		showPhoebe();
+		showPhoebe(null);
 	}
 
-	private function showPhoebe() {}
+	private function showPhoebe(_) {}
 
-	private function hidePhoebe() {}
+	private function hidePhoebe(_) {}
 
-	private function hideMonica(_) {}
+	private function hideMonica(_)
+	{
+		pizzasThrown = 100;
+		monica.x = 340;
+		monica.visible = false;
+		monica.velocity.x = 0;
+		canSpawnMonica = true;
+	}
 
 	private function spawnMonicaRossFight() {}
 
@@ -141,4 +153,13 @@ class HelperFriends extends FlxSpriteGroup
 	private function spawnRachel() {}
 
 	private function hideRachel(_) {}
+
+	public function resetLevel()
+	{
+		hideMonica(null);
+		hidePhoebe(null);
+		hideRachel(null);
+
+		spawnMountain.visible = false;
+	}
 }
