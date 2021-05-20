@@ -22,6 +22,11 @@ class BirdController extends FlxSpriteGroup
 		new FlxTimer().start(FlxG.random.float(createBirdTimerValue - 2, createBirdTimerValue + 2), createBird);
 	}
 
+	public static function resetLevel()
+	{
+		totalBirds = 0;
+	}
+
 	public function createBird(_)
 	{
 		if (totalBirds >= maxBirds)

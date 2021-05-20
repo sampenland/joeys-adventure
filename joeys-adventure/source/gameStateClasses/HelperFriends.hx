@@ -43,7 +43,7 @@ class HelperFriends extends FlxSpriteGroup
 	{
 		super.update(elapsed);
 
-		if (monica.x < 0)
+		if (monica.x + monica.width < 0)
 		{
 			pizzasThrown = 100;
 			monica.x = 340;
@@ -52,7 +52,7 @@ class HelperFriends extends FlxSpriteGroup
 			canSpawnMonica = true;
 		}
 
-		if (spawnMountain.x < 0)
+		if (spawnMountain.x + spawnMountain.width < 0)
 		{
 			spawnMountain.x = 340;
 			spawnMountain.visible = false;

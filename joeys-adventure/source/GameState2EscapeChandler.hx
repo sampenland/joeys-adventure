@@ -1,6 +1,7 @@
 package;
 
 import Main.Levels;
+import escapeChandler.Bird;
 import escapeChandler.Chandler;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -140,6 +141,28 @@ class GameState2EscapeChandler extends FlxState
 		FlxG.collide(Background.ground, pizzas);
 
 		FlxG.overlap(player.player, pizzas, playerCollidesPizza);
+
+		BirdController.birds.forEach(function(bird)
+		{
+			FlxG.overlap(player.player, (cast bird : Bird).collider, function(_, _)
+			{
+				(cast bird : Bird).attack();
+			});
+
+			FlxG.overlap(player.player, (cast bird : Bird).display, function(_, _)
+			{
+				var theBird = (cast bird : Bird);
+
+				if (player.player.y < theBird.display.y)
+				{
+					theBird.die();
+				}
+				else
+				{
+					respawnPlayer(null);
+				}
+			});
+		});
 	}
 
 	private function playerCollidesPizza(playerSprite:Player, pizza:Pizza)
@@ -199,6 +222,12 @@ class GameState2EscapeChandler extends FlxState
 		{
 			pizza.kill();
 		});
+
+		BirdController.birds.forEachAlive(function(bird)
+		{
+			bird.kill();
+		});
+		BirdController.resetLevel();
 
 		friendSpawner.resetLevel();
 
