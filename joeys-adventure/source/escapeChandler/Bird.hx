@@ -16,7 +16,8 @@ class Bird extends FlxSpriteGroup
 	private final alterCourseSpeedMax:Int = 4;
 
 	private var attacking:Bool = false;
-	private var dying:Bool = false;
+
+	public var dying:Bool = false;
 
 	public var display:FlxSprite;
 	public var collider:FlxSprite;
@@ -34,7 +35,7 @@ class Bird extends FlxSpriteGroup
 		display.loadGraphic(AssetPaths.bird__png, true, 8, 8);
 		display.animation.add("fly", [0, 1, 2, 3, 4, 5], 12, true);
 		display.animation.add("attack", [6, 7, 8, 9, 10, 11], 12, true);
-		display.animation.add("die", [12, 13, 14, 15], 15, false);
+		display.animation.add("die", [12, 13, 14, 15], 18, false);
 
 		display.animation.play("fly");
 		add(display);
@@ -116,12 +117,17 @@ class Bird extends FlxSpriteGroup
 
 	public function attack()
 	{
+		if (attacking)
+			return;
+
 		display.animation.play("attack");
 		attacking = true;
 	}
 
 	public function die()
 	{
+		BirdController.totalBirds--;
+
 		if (dying)
 			return;
 
@@ -129,8 +135,7 @@ class Bird extends FlxSpriteGroup
 		display.animation.play("die");
 		display.animation.finishCallback = function(_)
 		{
-			BirdController.totalBirds--;
-			kill();
+			this.kill();
 		};
 	}
 }

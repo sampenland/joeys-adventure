@@ -40,6 +40,7 @@ class GameState2EscapeChandler extends FlxState
 	public static var hud:Hud;
 
 	private var eatSound:FlxSound;
+	private var birdDie:FlxSound;
 
 	override public function create()
 	{
@@ -47,6 +48,7 @@ class GameState2EscapeChandler extends FlxState
 		super.create();
 
 		eatSound = FlxG.sound.load(AssetPaths.pizzaEat__ogg, 0.6, false);
+		birdDie = FlxG.sound.load(AssetPaths.birdDie__ogg, 0.6, false);
 
 		setupBackgroundCollisionGroups();
 
@@ -153,13 +155,17 @@ class GameState2EscapeChandler extends FlxState
 			{
 				var theBird = (cast bird : Bird);
 
-				if (player.player.y < theBird.display.y)
+				if (!theBird.dying)
 				{
-					theBird.die();
-				}
-				else
-				{
-					respawnPlayer(null);
+					if (player.player.y < theBird.display.y + theBird.display.height / 2)
+					{
+						theBird.die();
+						birdDie.play(true);
+					}
+					else
+					{
+						respawnPlayer(null);
+					}
 				}
 			});
 		});
